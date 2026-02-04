@@ -12,9 +12,12 @@ body {
 }
 
 .container {
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 10px;
 }
+
 
 header {
     background: white;
@@ -153,7 +156,6 @@ input[type="number"]:focus {
     margin-top: 10px;
 }
 
-/* Filtros */
 .filters {
     display: flex;
     gap: 10px;
@@ -184,7 +186,6 @@ input[type="number"]:focus {
     border-color: #10B981;
 }
 
-/* Estatísticas - Card Único */
 .stat-card-single {
     background: linear-gradient(135deg, #10B981 0%, #059669 100%);
     padding: 30px;
@@ -314,5 +315,8 @@ input[type="number"]:focus {
     .stat-card-single .stat-details {
         flex-direction: column;
         gap: 15px;
+    }
+    .container {
+        padding: 0 8px;
     }
 }
