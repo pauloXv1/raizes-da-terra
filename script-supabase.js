@@ -285,6 +285,32 @@ document.addEventListener('DOMContentLoaded', () => {
             showAlert(error.message || 'Erro ao salvar venda', 'error');
         }
     });
+    
+function enviarResumoWhatsApp() {
+    const dinheiro = parseFloat(document.getElementById('dinheiro').value) || 0;
+    const pix = parseFloat(document.getElementById('pix').value) || 0;
+    const cartao = parseFloat(document.getElementById('cartao').value) || 0;
+
+    const total = dinheiro + pix + cartao;
+
+    const hoje = new Date().toLocaleDateString('pt-BR');
+
+    const mensagem = `
+📊 *Resumo de Vendas*
+📅 ${hoje}
+
+💰 Dinheiro: ${formatCurrency(dinheiro)}
+📲 Pix: ${formatCurrency(pix)}
+💳 Cartão: ${formatCurrency(cartao)}
+
+✅ *Total:* ${formatCurrency(total)}
+    `;
+
+    const texto = encodeURIComponent(mensagem);
+
+    window.open(`https://wa.me/?text=${texto}`, '_blank');
+}
+
 
     updateSummary();
 });
