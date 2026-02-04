@@ -1,7 +1,7 @@
 const SUPABASE_URL = 'https://rpozdqemixvqfbjrtdpq.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_k8wBcxfvPGVpVq_kbEUtUA_xCnWHYZf';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseCliente = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 class SalesDatabase {
     constructor() {
@@ -11,7 +11,7 @@ class SalesDatabase {
 
     async loadSales() {
         try {
-            const { data, error } = await supabase
+            const { data, error } = await supabaseCliente
                 .from('vendas')
                 .select('*')
                 .order('data_venda', { ascending: false })
@@ -37,18 +37,15 @@ class SalesDatabase {
 
     async saveSale(sale) {
         try {
-            const { data, error } = await supabase
+            const { error } = await supabaseCliente
                 .from('vendas')
-                .insert([
-                    {
-                        data_venda: sale.date,
-                        dinheiro: sale.dinheiro,
-                        pix: sale.pix,
-                        cartao: sale.cartao,
-                        total: sale.total
-                    }
-                ])
-                .select();
+                .insert([{
+                    data_venda: sale.date,
+                    dinheiro: sale.dinheiro,
+                    pix: sale.pix,
+                    cartao: sale.cartao,
+                    total: sale.total
+                }]);
 
             if (error) throw error;
 
@@ -62,7 +59,7 @@ class SalesDatabase {
 
     async deleteSale(id) {
         try {
-            const { error } = await supabase
+            const { error } = await supabaseCliente
                 .from('vendas')
                 .delete()
                 .eq('id', id);
@@ -88,12 +85,11 @@ class SalesDatabase {
 
 const db = new SalesDatabase();
 
-document.getElementById('saleDate').valueAsDate = new Date();
-
 function updateSummary() {
     const dinheiro = parseFloat(document.getElementById('dinheiro').value) || 0;
     const pix = parseFloat(document.getElementById('pix').value) || 0;
     const cartao = parseFloat(document.getElementById('cartao').value) || 0;
+
     const total = dinheiro + pix + cartao;
 
     document.getElementById('summaryDinheiro').textContent = formatCurrency(dinheiro);
@@ -102,38 +98,9 @@ function updateSummary() {
     document.getElementById('summaryTotal').textContent = formatCurrency(total);
 }
 
-['dinheiro', 'pix', 'cartao'].forEach(id => {
-    document.getElementById(id).addEventListener('input', updateSummary);
-});
-
-document.getElementById('salesForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const sale = {
-        date: document.getElementById('saleDate').value,
-        dinheiro: parseFloat(document.getElementById('dinheiro').value) || 0,
-        pix: parseFloat(document.getElementById('pix').value) || 0,
-        cartao: parseFloat(document.getElementById('cartao').value) || 0
-    };
-
-    sale.total = sale.dinheiro + sale.pix + sale.cartao;
-
-    try {
-        await db.saveSale(sale);
-        showAlert('Venda registrada com sucesso!', 'success');
-
-        document.getElementById('dinheiro').value = '';
-        document.getElementById('pix').value = '';
-        document.getElementById('cartao').value = '';
-        updateSummary();
-    } catch (error) {
-        showAlert('Erro ao salvar venda. Tente novamente.', 'error');
-    }
-});
-
 function renderHistory(sales) {
     const container = document.getElementById('historyContainer');
-    
+
     if (sales.length === 0) {
         container.innerHTML = '<div class="empty-state">Nenhuma venda registrada ainda</div>';
         return;
@@ -180,13 +147,13 @@ function renderHistory(sales) {
 }
 
 async function deleteSale(id) {
-    if (confirm('Tem certeza que deseja excluir esta venda?')) {
-        try {
-            await db.deleteSale(id);
-            showAlert('Venda excluída com sucesso!', 'success');
-        } catch (error) {
-            showAlert('Erro ao excluir venda. Tente novamente.', 'error');
-        }
+    if (!confirm('Tem certeza que deseja excluir esta venda?')) return;
+
+    try {
+        await db.deleteSale(id);
+        showAlert('Venda excluída com sucesso!', 'success');
+    } catch (error) {
+        showAlert('Erro ao excluir venda', 'error');
     }
 }
 
@@ -205,12 +172,48 @@ function formatDate(dateString) {
 function showAlert(message, type) {
     const container = document.getElementById('alertContainer');
     const alert = document.createElement('div');
+
     alert.className = `alert alert-${type}`;
     alert.textContent = message;
+
     container.innerHTML = '';
     container.appendChild(alert);
 
-    setTimeout(() => {
-        alert.remove();
-    }, 3000);
+    setTimeout(() => alert.remove(), 3000);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('saleDate').valueAsDate = new Date();
+
+    ['dinheiro', 'pix', 'cartao'].forEach(id => {
+        document.getElementById(id).addEventListener('input', updateSummary);
+    });
+
+    document.getElementById('salesForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const sale = {
+            date: document.getElementById('saleDate').value,
+            dinheiro: parseFloat(document.getElementById('dinheiro').value) || 0,
+            pix: parseFloat(document.getElementById('pix').value) || 0,
+            cartao: parseFloat(document.getElementById('cartao').value) || 0
+        };
+
+        sale.total = sale.dinheiro + sale.pix + sale.cartao;
+
+        try {
+            await db.saveSale(sale);
+            showAlert('Venda registrada com sucesso!', 'success');
+
+            document.getElementById('dinheiro').value = '';
+            document.getElementById('pix').value = '';
+            document.getElementById('cartao').value = '';
+            updateSummary();
+        } catch (error) {
+            console.error(error);
+            showAlert(error.message || 'Erro ao salvar venda', 'error');
+        }
+    });
+
+    updateSummary();
+});
