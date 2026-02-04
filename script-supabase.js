@@ -3,6 +3,8 @@ const SUPABASE_KEY = 'sb_publishable_k8wBcxfvPGVpVq_kbEUtUA_xCnWHYZf';
 
 const supabaseCliente = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+let currentFilter = 'all';
+
 class SalesDatabase {
     constructor() {
         this.sales = [];
@@ -78,12 +80,81 @@ class SalesDatabase {
         return this.sales;
     }
 
+    getFilteredSales() {
+        const now = new Date();
+        
+        if (currentFilter === 'week') {
+            const startOfWeek = new Date(now);
+            startOfWeek.setDate(now.getDate() - now.getDay());
+            startOfWeek.setHours(0, 0, 0, 0);
+            
+            return this.sales.filter(sale => {
+                const saleDate = new Date(sale.date + 'T00:00:00');
+                return saleDate >= startOfWeek;
+            });
+        } else if (currentFilter === 'month') {
+            const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+            
+            return this.sales.filter(sale => {
+                const saleDate = new Date(sale.date + 'T00:00:00');
+                return saleDate >= startOfMonth;
+            });
+        }
+        
+        return this.sales; 
+    }
+
     render() {
-        renderHistory(this.getSales());
+        const filteredSales = this.getFilteredSales();
+        renderHistory(filteredSales);
+        updateStats(filteredSales);
     }
 }
 
 const db = new SalesDatabase();
+
+function filterAll() {
+    currentFilter = 'all';
+    updateFilterButtons();
+    db.render();
+}
+
+function filterWeek() {
+    currentFilter = 'week';
+    updateFilterButtons();
+    db.render();
+}
+
+function filterMonth() {
+    currentFilter = 'month';
+    updateFilterButtons();
+    db.render();
+}
+
+function updateFilterButtons() {
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    const buttons = document.querySelectorAll('.filter-btn');
+    if (currentFilter === 'all') {
+        buttons[0].classList.add('active');
+    } else if (currentFilter === 'week') {
+        buttons[1].classList.add('active');
+    } else if (currentFilter === 'month') {
+        buttons[2].classList.add('active');
+    }
+}
+
+function updateStats(sales) {
+    const total = sales.reduce((sum, sale) => sum + sale.total, 0);
+    const count = sales.length;
+    const average = count > 0 ? total / count : 0;
+    
+    document.getElementById('statTotal').textContent = formatCurrency(total);
+    document.getElementById('statCount').textContent = count;
+    document.getElementById('statAverage').textContent = formatCurrency(average);
+}
 
 function updateSummary() {
     const dinheiro = parseFloat(document.getElementById('dinheiro').value) || 0;
@@ -102,7 +173,7 @@ function renderHistory(sales) {
     const container = document.getElementById('historyContainer');
 
     if (sales.length === 0) {
-        container.innerHTML = '<div class="empty-state">Nenhuma venda registrada ainda</div>';
+        container.innerHTML = '<div class="empty-state">Nenhuma venda registrada neste período</div>';
         return;
     }
 

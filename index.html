@@ -37,7 +37,7 @@
 
                         <div class="form-group">
                             <div class="payment-input">
-                                <span>PIX:</span>
+                                <span>Pix:</span>
                                 <input type="number" id="pix" step="0.01" min="0" placeholder="0.00">
                             </div>
                         </div>
@@ -76,6 +76,22 @@
 
             <div class="card">
                 <h2>📊 Histórico de Vendas</h2>
+
+                <div class="filters">
+                    <button class="filter-btn active" onclick="filterAll()">📅 Todas</button>
+                    <button class="filter-btn" onclick="filterWeek()">📆 Esta Semana</button>
+                    <button class="filter-btn" onclick="filterMonth()">📅 Este Mês</button>
+                </div>
+
+                <div class="stat-card-single" id="statCard">
+                    <div class="stat-label">💰 Total do Período</div>
+                    <div class="stat-value" id="statTotal">R$ 0,00</div>
+                    <div class="stat-details">
+                        <span>📊 Média: <strong id="statAverage">R$ 0,00</strong></span>
+                        <span>🧾 Vendas: <strong id="statCount">0</strong></span>
+                    </div>
+                </div>
+
                 <div id="historyContainer">
                     <div class="empty-state">Nenhuma venda registrada ainda</div>
                 </div>

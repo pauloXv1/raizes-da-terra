@@ -119,7 +119,7 @@ input[type="number"]:focus {
 
 .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
 }
 
 .btn:active {
@@ -151,6 +151,80 @@ input[type="number"]:focus {
     font-size: 1.3em;
     font-weight: bold;
     margin-top: 10px;
+}
+
+/* Filtros */
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 10px 20px;
+    border: 2px solid #2F855A;
+    background: white;
+    color: #2F855A;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    font-size: 0.95em;
+}
+
+.filter-btn:hover {
+    background: #f0fdf4;
+    transform: translateY(-2px);
+}
+
+.filter-btn.active {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: white;
+    border-color: #10B981;
+}
+
+/* Estatísticas - Card Único */
+.stat-card-single {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    margin-bottom: 25px;
+}
+
+.stat-card-single .stat-label {
+    font-size: 1.1em;
+    margin-bottom: 15px;
+    opacity: 0.95;
+    font-weight: 500;
+}
+
+.stat-card-single .stat-value {
+    font-size: 3em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card-single .stat-details {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    padding-top: 20px;
+    border-top: 2px solid rgba(255, 255, 255, 0.3);
+    font-size: 1.1em;
+}
+
+.stat-card-single .stat-details span {
+    opacity: 0.95;
+}
+
+.stat-card-single .stat-details strong {
+    font-weight: bold;
+    opacity: 1;
 }
 
 .history-table {
@@ -227,5 +301,18 @@ input[type="number"]:focus {
 
     .history-table {
         font-size: 0.9em;
+    }
+
+    .filters {
+        flex-direction: column;
+    }
+
+    .filter-btn {
+        width: 100%;
+    }
+
+    .stat-card-single .stat-details {
+        flex-direction: column;
+        gap: 15px;
     }
 }
