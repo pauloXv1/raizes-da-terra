@@ -285,8 +285,11 @@ document.addEventListener('DOMContentLoaded', () => {
             showAlert(error.message || 'Erro ao salvar venda', 'error');
         }
     });
-    
-function enviarResumoWhatsApp() {
+
+    updateSummary();
+});
+
+function enviarResumoWhatsApp( ) {
     const dinheiro = parseFloat(document.getElementById('dinheiro').value) || 0;
     const pix = parseFloat(document.getElementById('pix').value) || 0;
     const cartao = parseFloat(document.getElementById('cartao').value) || 0;
@@ -310,7 +313,3 @@ function enviarResumoWhatsApp() {
 
     window.open(`https://wa.me/?text=${texto}`, '_blank');
 }
-
-
-    updateSummary();
-});
