@@ -313,8 +313,15 @@ function enviarResumoWhatsApp( ) {
 
     window.open(`https://wa.me/?text=${texto}`, '_blank');
 }
+
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/service-worker.js")
-    .then(() => console.log("SW registrado"))
-    .catch(err => console.log("Erro:", err));
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register("/service-worker.js")
+      .then((registration) => {
+        console.log("SW registrado com sucesso:", registration.scope);
+      })
+      .catch((err) => {
+        console.log("Erro ao registrar SW:", err);
+      });
+  });
 }
