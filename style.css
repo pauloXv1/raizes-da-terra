@@ -18,7 +18,12 @@ body {
     padding: 0 10px;
 }
 
-
+.header-gif{
+    width: 120px;
+    height: auto;
+    animation: pulse 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.5));
+}
 header {
     background: white;
     padding: 30px;
