@@ -8,73 +8,67 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #A8E6CF 0%, #56C596 100%);
     min-height: 100vh;
-    padding: 10px;
+    padding: 20px;
 }
 
 .container {
     width: 100%;
     max-width: 1100px;
     margin: 0 auto;
-    padding: 0;
+    padding: 0 10px;
 }
+
 
 header {
     background: white;
-    padding: 20px 15px;
+    padding: 30px;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     text-align: center;
 }
 
 h1 {
     color: #2F855A;
-    font-size: clamp(1.5rem, 5vw, 2.5rem);
-    margin-bottom: 5px;
-}
-
-header h2 {
-    color: #2F855A;
-    font-size: clamp(1.2rem, 4vw, 1.8rem);
+    font-size: 2.5em;
     margin-bottom: 10px;
-    border: none;
-    padding: 0;
 }
 
 .subtitle {
     color: #666;
-    font-size: clamp(0.9rem, 3vw, 1.1rem);
+    font-size: 1.1em;
 }
 
 .main-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
     margin-bottom: 30px;
 }
 
-.card-rigistrar,
-.card {
-    background: white;
-    padding: 20px 15px;
+.card-rigistrar {
+    background: rgb(255, 255, 255);
+    padding: 30px;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    width: 100%;
-    overflow: hidden;
+}
+.card {
+    background: white;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-.card-rigistrar h2,
-.card h2 {
+h2 {
     color: #2F855A;
-    margin-bottom: 15px;
-    font-size: clamp(1.2rem, 4vw, 1.8rem);
+    margin-bottom: 20px;
+    font-size: 1.8em;
     border-bottom: 3px solid #2F855A;
     padding-bottom: 10px;
-    word-wrap: break-word;
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 label {
@@ -82,7 +76,7 @@ label {
     margin-bottom: 8px;
     color: #333;
     font-weight: 600;
-    font-size: clamp(0.95rem, 3vw, 1.1rem);
+    font-size: 1.1em;
 }
 
 input[type="date"],
@@ -91,7 +85,7 @@ input[type="number"] {
     padding: 12px;
     border: 2px solid #ddd;
     border-radius: 8px;
-    font-size: 16px; /* Importante: 16px evita zoom no iOS */
+    font-size: 1em;
     transition: border-color 0.3s;
 }
 
@@ -103,36 +97,29 @@ input[type="number"]:focus {
 
 .payment-methods {
     display: grid;
-    gap: 12px;
+    gap: 15px;
 }
 
 .payment-input {
     display: flex;
     align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
+    gap: 15px;
 }
 
 .payment-input span {
     min-width: 80px;
     font-weight: 600;
     color: #555;
-    font-size: clamp(0.9rem, 3vw, 1rem);
-}
-
-.payment-input input {
-    flex: 1;
-    min-width: 150px;
 }
 
 .btn {
     width: 100%;
     padding: 15px;
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%); 
     color: white;
     border: none;
     border-radius: 8px;
-    font-size: clamp(1rem, 3vw, 1.2rem);
+    font-size: 1.2em;
     font-weight: 600;
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
@@ -149,44 +136,41 @@ input[type="number"]:focus {
 }
 
 .summary {
-    background: linear-gradient(135deg, #4ef3bc 0%, #059669 100%);
+    background: linear-gradient(135deg, #4ef3bc 0%, #059669 100%);  
     color: white;
-    padding: 15px;
+    padding: 20px;
     border-radius: 10px;
-    margin-top: 15px;
+    margin-top: 20px;
 }
 
 .summary h3 {
-    margin-bottom: 12px;
-    font-size: clamp(1.1rem, 4vw, 1.5rem);
+    margin-bottom: 15px;
+    font-size: 1.5em;
 }
 
 .summary-item {
     display: flex;
     justify-content: space-between;
-    padding: 8px 0;
+    padding: 10px 0;
     border-bottom: 1px solid rgba(74, 222, 128, 0.35);
-    font-size: clamp(0.9rem, 3vw, 1rem);
 }
 
 .summary-item:last-child {
     border-bottom: none;
-    font-size: clamp(1.1rem, 4vw, 1.3rem);
+    font-size: 1.3em;
     font-weight: bold;
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 .filters {
     display: flex;
-    gap: 8px;
-    margin-bottom: 15px;
+    gap: 10px;
+    margin-bottom: 20px;
     flex-wrap: wrap;
 }
 
 .filter-btn {
-    flex: 1;
-    min-width: 100px;
-    padding: 10px 15px;
+    padding: 10px 20px;
     border: 2px solid #2F855A;
     background: white;
     color: #2F855A;
@@ -194,7 +178,7 @@ input[type="number"]:focus {
     cursor: pointer;
     font-weight: 600;
     transition: all 0.3s;
-    font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+    font-size: 0.95em;
 }
 
 .filter-btn:hover {
@@ -210,37 +194,35 @@ input[type="number"]:focus {
 
 .stat-card-single {
     background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-    padding: 20px 15px;
+    padding: 30px;
     border-radius: 12px;
     text-align: center;
     color: white;
     box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .stat-card-single .stat-label {
-    font-size: clamp(0.95rem, 3vw, 1.1rem);
-    margin-bottom: 10px;
+    font-size: 1.1em;
+    margin-bottom: 15px;
     opacity: 0.95;
     font-weight: 500;
 }
 
 .stat-card-single .stat-value {
-    font-size: clamp(2rem, 8vw, 3rem);
+    font-size: 3em;
     font-weight: bold;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    word-break: break-word;
 }
 
 .stat-card-single .stat-details {
     display: flex;
     justify-content: space-around;
-    gap: 15px;
-    padding-top: 15px;
+    gap: 20px;
+    padding-top: 20px;
     border-top: 2px solid rgba(255, 255, 255, 0.3);
-    font-size: clamp(0.85rem, 2.5vw, 1.1rem);
-    flex-wrap: wrap;
+    font-size: 1.1em;
 }
 
 .stat-card-single .stat-details span {
@@ -255,25 +237,14 @@ input[type="number"]:focus {
 .history-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 15px;
-    font-size: clamp(0.75rem, 2.5vw, 1rem);
-    overflow-x: auto;
-    display: block;
-}
-
-.history-table thead,
-.history-table tbody {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
+    margin-top: 20px;
 }
 
 .history-table th,
 .history-table td {
-    padding: 10px 5px;
+    padding: 12px;
     text-align: left;
     border-bottom: 1px solid #ddd;
-    word-wrap: break-word;
 }
 
 .history-table th {
@@ -290,11 +261,10 @@ input[type="number"]:focus {
     background: #f5576c;
     color: white;
     border: none;
-    padding: 6px 10px;
+    padding: 6px 12px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: clamp(0.75rem, 2vw, 0.9rem);
-    white-space: nowrap;
+    font-size: 0.9em;
 }
 
 .delete-btn:hover {
@@ -302,11 +272,10 @@ input[type="number"]:focus {
 }
 
 .alert {
-    padding: 12px;
+    padding: 15px;
     border-radius: 8px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     font-weight: 600;
-    font-size: clamp(0.85rem, 2.5vw, 1rem);
 }
 
 .alert-success {
@@ -323,34 +292,40 @@ input[type="number"]:focus {
 
 .empty-state {
     text-align: center;
-    padding: 30px 15px;
+    padding: 40px;
     color: #999;
     font-style: italic;
-    font-size: clamp(0.9rem, 3vw, 1rem);
 }
 
-/* Media Queries */
-@media (min-width: 768px) {
-    body {
-        padding: 20px;
-    }
-
+@media (max-width: 768px) {
     .main-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 30px;
+        grid-template-columns: 1fr;
     }
 
-    .card-rigistrar,
-    .card {
-        padding: 30px;
+    h1 {
+        font-size: 1.8em;
     }
 
-    header {
-        padding: 30px;
-        margin-bottom: 30px;
+    .history-table {
+        font-size: 0.9em;
+    }
+
+    .filters {
+        flex-direction: column;
+    }
+
+    .filter-btn {
+        width: 100%;
+    }
+
+    .stat-card-single .stat-details {
+        flex-direction: column;
+        gap: 12px;
+    }
+    .container {
+        padding: 0 8px;
     }
 }
-
 @media (max-width: 480px) {
     .filters {
         flex-direction: column;
@@ -363,7 +338,7 @@ input[type="number"]:focus {
 
     .stat-card-single .stat-details {
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
     }
 
     .payment-input {
@@ -379,7 +354,6 @@ input[type="number"]:focus {
         width: 100%;
     }
 
-    /* Ajuste da tabela no mobile */
     .history-table {
         font-size: 0.7rem;
     }
