@@ -313,3 +313,6 @@ function enviarResumoWhatsApp( ) {
 
     window.open(`https://wa.me/?text=${texto}`, '_blank');
 }
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js");
+}
