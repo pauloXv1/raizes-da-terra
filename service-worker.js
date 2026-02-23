@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vendas-v1';
+const CACHE_NAME = 'vendas-v2'; 
 const urlsToCache = [
   '/',
   '/index.html',
@@ -10,12 +10,11 @@ const urlsToCache = [
 self.addEventListener('install', (event) => {
   console.log('Service Worker: Instalando...');
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('Service Worker: Cache aberto');
-        return cache.addAll(urlsToCache);
-      })
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(urlsToCache);
+    })
   );
+  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
@@ -25,20 +24,28 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.map((cache) => {
           if (cache !== CACHE_NAME) {
-            console.log('Service Worker: Limpando cache antigo');
+            console.log('Service Worker: Limpando cache antigo:', cache);
             return caches.delete(cache);
           }
         })
       );
     })
   );
+  self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        return response || fetch(event.request);
+    fetch(event.request)
+      .then((networkResponse) => {
+        const responseClone = networkResponse.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseClone);
+        });
+        return networkResponse;
+      })
+      .catch(() => {
+        return caches.match(event.request);
       })
   );
 });

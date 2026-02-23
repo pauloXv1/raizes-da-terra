@@ -10,7 +10,7 @@ html, body {
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
     background: linear-gradient(135deg, #A8E6CF 0%, #56C596 100%);
     min-height: 100vh;
     padding: 20px;
@@ -32,7 +32,7 @@ body {
 }
 
 header {
-    background: white;
+    background: rgb(255, 255, 255);
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
@@ -213,7 +213,7 @@ input[type="number"]:focus {
     border-radius: 12px;
     text-align: center;
     color: white;
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 4px 15px rgba(111, 225, 185, 0.3);
     margin-bottom: 25px;
 }
 
