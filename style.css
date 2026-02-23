@@ -4,6 +4,16 @@
     box-sizing: border-box;
 }
 
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+.container, .card, .card-rigistrar {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #A8E6CF 0%, #56C596 100%);
@@ -310,14 +320,16 @@ input[type="number"]:focus {
 
 @media (max-width: 768px) {
     body {
-        padding: 10px;
+        padding: 8px; 
     }
-
     header {
         padding: 15px;
         margin-bottom: 15px;
     }
-
+    .container {
+        padding: 0 4px;
+    }
+    
     .main-grid {
         grid-template-columns: 1fr;
         gap: 15px;
