@@ -1,439 +1,3 @@
-/* * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html, body {
-    overflow-x: hidden;
-    width: 100%;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
-    background: linear-gradient(135deg, #A8E6CF 0%, #56C596 100%);
-    min-height: 100vh;
-    padding: 20px;
-}
-
-.container {
-    width: 100%;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 10px;
-    box-sizing: border-box;
-}
-
-.header-gif {
-    width: 120px;
-    height: auto;
-    animation: pulse 2s ease-in-out infinite;
-    filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.5));
-}
-
-header {
-    background: rgb(255, 255, 255);
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    margin-bottom: 30px;
-    text-align: center;
-}
-
-h1 {
-    color: #2F855A;
-    font-size: 2.5em;
-    margin-bottom: 10px;
-}
-
-.subtitle {
-    color: #666;
-    font-size: 1.1em;
-}
-
-.main-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    margin-bottom: 30px;
-}
-
-.card-rigistrar {
-    background: rgb(255, 255, 255);
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-
-.card {
-    background: rgb(247, 246, 246);
-    padding: 15px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-
-h2 {
-    color: #2F855A;
-    margin-bottom: 20px;
-    font-size: 1.8em;
-    border-bottom: 3px solid #2F855A;
-    padding-bottom: 10px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-label {
-    display: block;
-    margin-bottom: 8px;
-    color: #333;
-    font-weight: 600;
-    font-size: 1.1em;
-}
-
-input[type="date"],
-input[type="number"] {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    font-size: 1em;
-    transition: border-color 0.3s;
-    box-sizing: border-box;
-}
-
-input[type="date"]:focus,
-input[type="number"]:focus {
-    outline: none;
-    border-color: #2F855A;
-}
-
-.payment-methods {
-    display: grid;
-    gap: 15px;
-}
-
-.payment-input {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.payment-input span {
-    min-width: 80px;
-    font-weight: 600;
-    color: #555;
-}
-
-.btn {
-    width: 100%;
-    padding: 15px;
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.2em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    margin-top: 10px;
-    box-sizing: border-box;
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
-}
-
-.btn:active {
-    transform: translateY(0);
-}
-
-.summary {
-    background: linear-gradient(135deg, #4ef3bc 0%, #059669 100%);
-    color: white;
-    padding: 15px;
-    border-radius: 10px;
-    margin-top: 20px;
-}
-
-.summary h3 {
-    margin-bottom: 15px;
-    font-size: 1.5em;
-}
-
-.summary-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(74, 222, 128, 0.35);
-}
-
-.summary-item:last-child {
-    border-bottom: none;
-    font-size: 1.3em;
-    font-weight: bold;
-    margin-top: 10px;
-}
-
-.filters {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-}
-
-.filter-btn {
-    padding: 10px 20px;
-    border: 2px solid #2F855A;
-    background: white;
-    color: #2F855A;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s;
-    font-size: 0.95em;
-}
-
-.filter-btn:hover {
-    background: #f0fdf4;
-    transform: translateY(-2px);
-}
-
-.filter-btn.active {
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-    color: white;
-    border-color: #10B981;
-}
-
-.stat-card-single {
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-    padding: 30px;
-    border-radius: 12px;
-    text-align: center;
-    color: white;
-    box-shadow: 0 4px 15px rgba(111, 225, 185, 0.3);
-    margin-bottom: 25px;
-}
-
-.stat-card-single .stat-label {
-    font-size: 1.1em;
-    margin-bottom: 15px;
-    opacity: 0.95;
-    font-weight: 500;
-}
-
-.stat-card-single .stat-value {
-    font-size: 3em;
-    font-weight: bold;
-    margin-bottom: 20px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.stat-card-single .stat-details {
-    display: flex;
-    justify-content: space-around;
-    gap: 20px;
-    padding-top: 20px;
-    border-top: 2px solid rgba(255, 255, 255, 0.3);
-    font-size: 1.1em;
-}
-
-.stat-card-single .stat-details span {
-    opacity: 0.95;
-}
-
-.stat-card-single .stat-details strong {
-    font-weight: bold;
-    opacity: 1;
-}
-
-#historyContainer {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-.history-table {
-    width: 100%;
-    min-width: 480px;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-.history-table th,
-.history-table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-.history-table th {
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-    color: white;
-    font-weight: 600;
-}
-
-.history-table tr:hover {
-    background: #f5f5f5;
-}
-
-.delete-btn {
-    background: #f5576c;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.9em;
-}
-
-.delete-btn:hover {
-    background: #d63447;
-}
-
-.alert {
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-weight: 600;
-}
-
-.alert-success {
-    background: #d4edda;
-    border: 2px solid #c3e6cb;
-}
-
-.alert-error {
-    background: #f8d7da;
-    color: #721c24;
-    border: 2px solid #f5c6cb;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 40px;
-    color: #999;
-    font-style: italic;
-}
-
-@media (max-width: 768px) {
-    body {
-        padding: 8px;
-    }
-
-    header {
-        padding: 15px;
-        margin-bottom: 15px;
-    }
-
-    .container {
-        padding: 0 4px;
-    }
-
-    .main-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    h1 {
-        font-size: 1.5em;
-    }
-
-    h2 {
-        font-size: 1.3em;
-    }
-
-    .header-gif {
-        width: 80px;
-    }
-
-    .stat-card-single .stat-value {
-        font-size: 2em;
-    }
-
-    .stat-card-single {
-        padding: 20px 15px;
-    }
-
-    .stat-card-single .stat-details {
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .filters {
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
-
-    .filter-btn {
-        flex: 1;
-        min-width: 100px;
-        padding: 10px 8px;
-        font-size: 0.85em;
-        text-align: center;
-    }
-
-    .card-rigistrar,
-    .card {
-        padding: 15px;
-        width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    h1 {
-        font-size: 1.3em;
-    }
-
-    .stat-card-single .stat-value {
-        font-size: 1.8em;
-    }
-
-    .payment-input {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
-    }
-
-    .payment-input span {
-        width: 100%;
-        font-size: 0.95em;
-    }
-
-    .payment-input input {
-        width: 100%;
-    }
-
-    .filters {
-        flex-direction: column;
-    }
-
-    .filter-btn {
-        width: 100%;
-    }
-
-    .btn {
-        font-size: 1em;
-        padding: 12px;
-    }
-
-    .history-table {
-        font-size: 0.75rem;
-        min-width: 420px;
-    }
-
-    .history-table th,
-    .history-table td {
-        padding: 8px 5px;
-    }
-
-    .delete-btn {
-        padding: 5px 8px;
-        font-size: 0.8em;
-    }
-} */
-
 * {
     margin: 0;
     padding: 0;
@@ -451,7 +15,15 @@ body {
     min-height: 100vh;
     padding: 20px;
 }
-
+.main-grid > * {
+    min-width: 0;
+    width: 100%;
+}
+input[type="date"],
+input[type="number"] {
+    min-width: 0;
+    max-width: 100%;
+}
 .container {
     width: 100%;
     max-width: 1100px;
@@ -499,7 +71,6 @@ h1 {
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    /* SEM width fixo — deixa o grid controlar */
 }
 
 .card {
@@ -507,7 +78,6 @@ h1 {
     padding: 15px;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    /* REMOVIDO: width: 40% — era o culpado do overflow */
 }
 
 h2 {
@@ -755,7 +325,6 @@ input[type="number"]:focus {
     font-style: italic;
 }
 
-/* ── TABLET ── */
 @media (max-width: 768px) {
     body {
         padding: 8px;
@@ -816,11 +385,10 @@ input[type="number"]:focus {
     .card-rigistrar,
     .card {
         padding: 15px;
-        width: 100%; /* garante largura total no mobile */
+        width: 100%; 
     }
 }
 
-/* ── CELULAR ── */
 @media (max-width: 480px) {
     h1 {
         font-size: 1.3em;
