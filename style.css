@@ -239,8 +239,14 @@ input[type="number"]:focus {
     opacity: 1;
 }
 
+#historyContainer {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
 .history-table {
     width: 100%;
+    min-width: 480px; 
     border-collapse: collapse;
     margin-top: 20px;
 }
@@ -303,68 +309,112 @@ input[type="number"]:focus {
 }
 
 @media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    header {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
     .main-grid {
         grid-template-columns: 1fr;
+        gap: 15px;
     }
 
     h1 {
-        font-size: 1.8em;
+        font-size: 1.5em;
     }
 
-    .history-table {
-        font-size: 0.9em;
+    h2 {
+        font-size: 1.3em;
     }
 
-    .filters {
-        flex-direction: column;
+    .header-gif {
+        width: 80px;
     }
 
-    .filter-btn {
-        width: 100%;
+    .stat-card-single .stat-value {
+        font-size: 2em; 
+    }
+
+    .stat-card-single {
+        padding: 20px 15px;
     }
 
     .stat-card-single .stat-details {
         flex-direction: column;
         gap: 12px;
     }
-    .container {
-        padding: 0 8px;
-    }
-}
-@media (max-width: 480px) {
+
     .filters {
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: wrap;
     }
 
     .filter-btn {
-        width: 100%;
-        min-width: 100%;
+        flex: 1;
+        min-width: 100px;
+        padding: 10px 8px;
+        font-size: 0.85em;
+        text-align: center;
     }
 
-    .stat-card-single .stat-details {
-        flex-direction: column;
-        gap: 8px;
+    .card-rigistrar, .card {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.3em;
+    }
+
+    .stat-card-single .stat-value {
+        font-size: 1.8em;
     }
 
     .payment-input {
         flex-direction: column;
         align-items: flex-start;
+        gap: 6px;
     }
 
     .payment-input span {
         width: 100%;
+        font-size: 0.95em;
     }
 
     .payment-input input {
         width: 100%;
     }
 
+    .filters {
+        flex-direction: column;
+    }
+
+    .filter-btn {
+        width: 100%;
+    }
+
+    .btn {
+        font-size: 1em;
+        padding: 12px;
+    }
+
     .history-table {
-        font-size: 0.7rem;
+        font-size: 0.75rem;
+        min-width: 420px;
     }
 
     .history-table th,
     .history-table td {
-        padding: 8px 3px;
+        padding: 8px 5px;
+    }
+
+    .delete-btn {
+        padding: 5px 8px;
+        font-size: 0.8em;
     }
 }
