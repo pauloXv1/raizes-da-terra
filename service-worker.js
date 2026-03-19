@@ -1,5 +1,4 @@
 const CACHE_NAME = 'vendas-v99';
-
 const urlsToCache = [
   'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'
 ];
@@ -25,7 +24,12 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  
+
+  // Nunca intercepta requisições do Supabase
+  if (event.request.url.includes('supabase.co')) {
+    return;
+  }
+
   if (
     event.request.url.includes('index.html') ||
     event.request.url.includes('style.css') ||
@@ -42,6 +46,8 @@ self.addEventListener('fetch', (event) => {
         caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
         return response;
       })
-      .catch(() => caches.match(event.request))
+      .catch(() => caches.match(event.request).then(cached => {
+        return cached || new Response('Offline', { status: 503 });
+      }))
   );
 });
