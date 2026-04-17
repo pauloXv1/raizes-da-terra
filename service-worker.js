@@ -1,13 +1,7 @@
 const CACHE_NAME = 'vendas-v99';
-const urlsToCache = [
-  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'
-];
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache))
-  );
 });
 
 self.addEventListener('activate', (event) => {
@@ -24,19 +18,15 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-
-  // Nunca intercepta requisições do Supabase
-  if (event.request.url.includes('supabase.co')) {
-    return;
-  }
+  const url = event.request.url;
 
   if (
-    event.request.url.includes('index.html') ||
-    event.request.url.includes('style.css') ||
-    event.request.url.includes('script-supabase.js')
+    url.includes('supabase.co') ||
+    url.includes('cdn.jsdelivr.net') ||
+    url.includes('cdnjs.') ||
+    !url.startsWith('https://raizes-da-terra-eta.vercel.app')
   ) {
-    event.respondWith(fetch(event.request));
-    return;
+    return; 
   }
 
   event.respondWith(
