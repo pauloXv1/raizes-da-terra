@@ -270,6 +270,7 @@ function showAlert(message, type) {
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('saleDate').valueAsDate = new Date();
+    iniciarNotificacoes()
 
     ['dinheiro', 'pix', 'cartao', 'gastos'].forEach(id => {
         document.getElementById(id).addEventListener('input', updateSummary);
@@ -325,7 +326,7 @@ function enviarResumoWhatsApp() {
 💰 Dinheiro: ${formatCurrency(dinheiro)}
 📲 Pix: ${formatCurrency(pix)}
 💳 Cartão: ${formatCurrency(cartao)}
-💸 Gastos/Descontos: ${formatCurrency(gastos)}
+💸 Gastos: ${formatCurrency(gastos)}
 ✅ *Total Bruto:* ${formatCurrency(total)}
 🟢 *Total Líquido:* ${formatCurrency(liquido)}
     `;
