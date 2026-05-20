@@ -27,7 +27,9 @@ class SalesDatabase {
                 dinheiro: parseFloat(sale.dinheiro),
                 pix: parseFloat(sale.pix),
                 cartao: parseFloat(sale.cartao),
-                total: parseFloat(sale.total)
+                total: parseFloat(sale.total),
+                gastos: parseFloat(sale.gastos) || 0,
+                liquido: parseFloat(sale.total) - (parseFloat(sale.gastos) || 0)
             }));
 
             this.render();
@@ -46,7 +48,8 @@ class SalesDatabase {
                     dinheiro: sale.dinheiro,
                     pix: sale.pix,
                     cartao: sale.cartao,
-                    total: sale.total
+                    total: sale.total,
+                    gastos: sale.gastos
                 }]);
 
             if (error) throw error;
@@ -82,26 +85,26 @@ class SalesDatabase {
 
     getFilteredSales() {
         const now = new Date();
-        
+
         if (currentFilter === 'week') {
             const startOfWeek = new Date(now);
             startOfWeek.setDate(now.getDate() - now.getDay());
             startOfWeek.setHours(0, 0, 0, 0);
-            
+
             return this.sales.filter(sale => {
                 const saleDate = new Date(sale.date + 'T00:00:00');
                 return saleDate >= startOfWeek;
             });
         } else if (currentFilter === 'month') {
             const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-            
+
             return this.sales.filter(sale => {
                 const saleDate = new Date(sale.date + 'T00:00:00');
                 return saleDate >= startOfMonth;
             });
         }
-        
-        return this.sales; 
+
+        return this.sales;
     }
 
     render() {
@@ -135,7 +138,7 @@ function updateFilterButtons() {
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.remove('active');
     });
-    
+
     const buttons = document.querySelectorAll('.filter-btn');
     if (currentFilter === 'all') {
         buttons[0].classList.add('active');
@@ -147,11 +150,15 @@ function updateFilterButtons() {
 }
 
 function updateStats(sales) {
-    const total = sales.reduce((sum, sale) => sum + sale.total, 0);
+    const totalBruto = sales.reduce((sum, sale) => sum + sale.total, 0);
+    const totalGastos = sales.reduce((sum, sale) => sum + sale.gastos, 0);
+    const totalLiquido = totalBruto - totalGastos;
     const count = sales.length;
-    const average = count > 0 ? total / count : 0;
-    
-    document.getElementById('statTotal').textContent = formatCurrency(total);
+    const average = count > 0 ? totalLiquido / count : 0;
+
+    document.getElementById('statTotal').textContent = formatCurrency(totalBruto);
+    document.getElementById('statGastos').textContent = formatCurrency(totalGastos);
+    document.getElementById('statLiquido').textContent = formatCurrency(totalLiquido);
     document.getElementById('statCount').textContent = count;
     document.getElementById('statAverage').textContent = formatCurrency(average);
 }
@@ -160,13 +167,17 @@ function updateSummary() {
     const dinheiro = parseFloat(document.getElementById('dinheiro').value) || 0;
     const pix = parseFloat(document.getElementById('pix').value) || 0;
     const cartao = parseFloat(document.getElementById('cartao').value) || 0;
+    const gastos = parseFloat(document.getElementById('gastos').value) || 0;
 
     const total = dinheiro + pix + cartao;
+    const liquido = total - gastos;
 
     document.getElementById('summaryDinheiro').textContent = formatCurrency(dinheiro);
     document.getElementById('summaryPix').textContent = formatCurrency(pix);
     document.getElementById('summaryCartao').textContent = formatCurrency(cartao);
+    document.getElementById('summaryGastos').textContent = formatCurrency(gastos);
     document.getElementById('summaryTotal').textContent = formatCurrency(total);
+    document.getElementById('summaryLiquido').textContent = formatCurrency(liquido);
 }
 
 function renderHistory(sales) {
@@ -185,7 +196,9 @@ function renderHistory(sales) {
                     <th>Dinheiro</th>
                     <th>PIX</th>
                     <th>Cartão</th>
-                    <th>Total</th>
+                    <th>Total Bruto</th>
+                    <th>Gastos</th>
+                    <th>Total Líquido</th>
                     <th>Ação</th>
                 </tr>
             </thead>
@@ -199,7 +212,9 @@ function renderHistory(sales) {
                 <td>${formatCurrency(sale.dinheiro)}</td>
                 <td>${formatCurrency(sale.pix)}</td>
                 <td>${formatCurrency(sale.cartao)}</td>
-                <td><strong>${formatCurrency(sale.total)}</strong></td>
+                <td>${formatCurrency(sale.total)}</td>
+                <td style="color: #e53e3e;">${formatCurrency(sale.gastos)}</td>
+                <td><strong style="color: #276749;">${formatCurrency(sale.liquido)}</strong></td>
                 <td>
                     <button class="delete-btn" onclick="deleteSale(${sale.id})">
                         🗑️ Excluir
@@ -256,7 +271,7 @@ function showAlert(message, type) {
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('saleDate').valueAsDate = new Date();
 
-    ['dinheiro', 'pix', 'cartao'].forEach(id => {
+    ['dinheiro', 'pix', 'cartao', 'gastos'].forEach(id => {
         document.getElementById(id).addEventListener('input', updateSummary);
     });
 
@@ -267,7 +282,8 @@ document.addEventListener('DOMContentLoaded', () => {
             date: document.getElementById('saleDate').value,
             dinheiro: parseFloat(document.getElementById('dinheiro').value) || 0,
             pix: parseFloat(document.getElementById('pix').value) || 0,
-            cartao: parseFloat(document.getElementById('cartao').value) || 0
+            cartao: parseFloat(document.getElementById('cartao').value) || 0,
+            gastos: parseFloat(document.getElementById('gastos').value) || 0
         };
 
         sale.total = sale.dinheiro + sale.pix + sale.cartao;
@@ -279,6 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('dinheiro').value = '';
             document.getElementById('pix').value = '';
             document.getElementById('cartao').value = '';
+            document.getElementById('gastos').value = '';
             updateSummary();
         } catch (error) {
             console.error(error);
@@ -289,39 +306,42 @@ document.addEventListener('DOMContentLoaded', () => {
     updateSummary();
 });
 
-function enviarResumoWhatsApp( ) {
+function enviarResumoWhatsApp() {
     const dinheiro = parseFloat(document.getElementById('dinheiro').value) || 0;
     const pix = parseFloat(document.getElementById('pix').value) || 0;
     const cartao = parseFloat(document.getElementById('cartao').value) || 0;
+    const gastos = parseFloat(document.getElementById('gastos').value) || 0;
 
     const total = dinheiro + pix + cartao;
+    const liquido = total - gastos;
 
     const hoje = new Date().toLocaleDateString('pt-BR');
+    const usuario = sessionStorage.getItem('usuario') || 'Desconhecido';
 
     const mensagem = `
 📊 *Resumo de Vendas*
 📅 ${hoje}
-
+👤 Usuário: ${usuario}
 💰 Dinheiro: ${formatCurrency(dinheiro)}
 📲 Pix: ${formatCurrency(pix)}
 💳 Cartão: ${formatCurrency(cartao)}
-
-✅ *Total:* ${formatCurrency(total)}
+💸 Gastos/Descontos: ${formatCurrency(gastos)}
+✅ *Total Bruto:* ${formatCurrency(total)}
+🟢 *Total Líquido:* ${formatCurrency(liquido)}
     `;
 
     const texto = encodeURIComponent(mensagem);
-
     window.open(`https://wa.me/?text=${texto}`, '_blank');
 }
 
 if ("serviceWorker" in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register("/service-worker.js")
-      .then((registration) => {
-        console.log("SW registrado com sucesso:", registration.scope);
-      })
-      .catch((err) => {
-        console.log("Erro ao registrar SW:", err);
-      });
-  });
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register("/service-worker.js")
+            .then((registration) => {
+                console.log("SW registrado com sucesso:", registration.scope);
+            })
+            .catch((err) => {
+                console.log("Erro ao registrar SW:", err);
+            });
+    });
 }

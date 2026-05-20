@@ -3,115 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RAIZES DA TERRA</title>
+    <title>Login – Raizes da Terra</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="favicon-32.png" sizes="32x32">
-    <link rel="shortcut icon" href="favicon-32.png">
-    <link rel="apple-touch-icon" href="icon-central.png">
+    <link rel="stylesheet" href="login.css">
+    <link rel="icon" type="image/png" href="/image/favicon-32.png" sizes="32x32">
+    <link rel="shortcut icon" href="/image/favicon-32.png">
+    <link rel="apple-touch-icon" href="/image/icon-central.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Raizes da Terra">
     <meta name="theme-color" content="#4CAF50">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <img src="goku-vegeta.gif" alt="Goku e Vegeta" class="header-gif">
-            <h1>Sistema de Vendas</h1>
-            <h2>Raizes da Terra</h2>
-            <p class="subtitle">Controle das vendas diárias</p>
-        </header>
 
-        <div class="main-grid">
-            <div class="card-rigistrar">
-                <h2>Registrar Venda do Dia</h2>
-                
-                <div id="alertContainer"></div>
+    <div class="login-wrapper">
+        <div class="login-card">
 
-                <form id="salesForm">
-                    <div class="form-group">
-                        <label for="saleDate">Data:</label>
-                        <input type="date" id="saleDate">
-                    </div>
-
-                    <div class="payment-methods">
-                        <div class="form-group">
-                            <label>Formas de Pagamento:</label>
-                            <div class="payment-input">
-                                <span>Dinheiro:</span>
-                                <input type="number" id="dinheiro" step="0.01" min="0" placeholder="0.00">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="payment-input">
-                                <span>Pix:</span>
-                                <input type="number" id="pix" step="0.01" min="0" placeholder="0.00">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="payment-input">
-                                <span>Cartão:</span>
-                                <input type="number" id="cartao" step="0.01" min="0" placeholder="0.00">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="summary" id="currentSummary">
-                        <h3>Resumo Atual</h3>
-                        <div class="summary-item">
-                            <span>Dinheiro:</span>
-                            <span id="summaryDinheiro">R$ 0,00</span>
-                        </div>
-                        <div class="summary-item">
-                            <span>PIX:</span>
-                            <span id="summaryPix">R$ 0,00</span>
-                        </div>
-                        <div class="summary-item">
-                            <span>Cartão:</span>
-                            <span id="summaryCartao">R$ 0,00</span>
-                        </div>
-                        <div class="summary-item">
-                            <span>TOTAL:</span>
-                            <span id="summaryTotal">R$ 0,00</span>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn">Salvar Venda</button>
-
-                    <button class="btn" type="button" onclick="enviarResumoWhatsApp()">
-                        📤 Enviar resumo no WhatsApp
-                    </button>
-
-                </form>
-
+            <div class="login-header">
+                <img src="/image/goku-vegeta.gif" alt="Logo">
+                <h1>Raizes da Terra</h1>
+                <p>Sistema de Vendas</p>
             </div>
 
-            <div class="card">
-                <h2>📊 Histórico de Vendas</h2>
+            <div class="login-body">
+                <h2>🔐 Entrar no Sistema</h2>
 
-                <div class="filters">
-                    <button class="filter-btn active" onclick="filterAll()">📅 Todas</button>
-                    <button class="filter-btn" onclick="filterWeek()">📆 Esta Semana</button>
-                    <button class="filter-btn" onclick="filterMonth()">📅 Este Mês</button>
+                <div class="alert-error" id="alertError">
+                    ❌ Usuário ou senha incorretos.
                 </div>
 
-                <div class="stat-card-single" id="statCard">
-                    <div class="stat-label">💰 Total do Período</div>
-                    <div class="stat-value" id="statTotal">R$ 0,00</div>
-                    <div class="stat-details">
-                        <span>📊 Média: <strong id="statAverage">R$ 0,00</strong></span>
-                        <span>🧾 Vendas: <strong id="statCount">0</strong></span>
+                <form id="loginForm" autocomplete="off">
+                    <div class="form-group">
+                        <label for="username">Usuário</label>
+                        <div class="input-wrapper">
+                            <span class="icon">👤</span>
+                            <input
+                                type="text"
+                                id="username"
+                                placeholder="Digite seu usuário"
+                                autocomplete="username"
+                                required
+                            >
+                        </div>
                     </div>
-                </div>
-                <div id="historyContainer" style="overflow-x: auto;">
-                    <div class="empty-state">Nenhuma venda registrada ainda</div>
-                </div>
+
+                    <div class="form-group">
+                        <label for="password">Senha</label>
+                        <div class="input-wrapper">
+                            <span class="icon">🔒</span>
+                            <input
+                                type="password"
+                                id="password"
+                                placeholder="Digite sua senha"
+                                autocomplete="current-password"
+                                required
+                            >
+                            <button type="button" class="toggle-password" id="toggleBtn" title="Mostrar/ocultar senha">👁️</button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-login" id="btnLogin">
+                        Entrar
+                    </button>
+                </form>
+            </div>
+
+            <div class="login-footer">
+                Raizes da Terra © 2025
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script-supabase.js"></script>
+
+    <script src="login.js"></script>
 </body>
 </html>

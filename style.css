@@ -185,6 +185,15 @@ input[type="number"]:focus {
     margin-top: 10px;
 }
 
+.summary-gastos span:last-child {
+    color: #e53e3e;
+    font-weight: bold;
+}
+.summary-liquido span:last-child {
+    color: #276749;
+    font-weight: bold;
+}
+
 .filters {
     display: flex;
     gap: 10px;
