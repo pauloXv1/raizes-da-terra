@@ -1,3 +1,9 @@
+if (!sessionStorage.getItem('sessionViva') || localStorage.getItem('logado') !== 'true') {
+    localStorage.removeItem('logado');
+    localStorage.removeItem('usuario');
+    window.location.href = 'login.html';
+}
+
 const SUPABASE_URL = 'https://rpozdqemixvqfbjrtdpq.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_k8wBcxfvPGVpVq_kbEUtUA_xCnWHYZf';
 
@@ -135,11 +141,15 @@ function filterMonth() {
 }
 
 function updateFilterButtons() {
-    document.querySelectorAll('.filter-btn').forEach(btn => {
+    const buttons = document.querySelectorAll('.filter-btn');
+
+    // FIX: verifica se os botões existem antes de chamar forEach
+    if (!buttons || buttons.length === 0) return;
+
+    buttons.forEach(btn => {
         btn.classList.remove('active');
     });
 
-    const buttons = document.querySelectorAll('.filter-btn');
     if (currentFilter === 'all') {
         buttons[0].classList.add('active');
     } else if (currentFilter === 'week') {
@@ -183,7 +193,10 @@ function updateSummary() {
 function renderHistory(sales) {
     const container = document.getElementById('historyContainer');
 
-    if (sales.length === 0) {
+    // FIX: verifica se o container existe
+    if (!container) return;
+
+    if (!sales || sales.length === 0) {
         container.innerHTML = '<div class="empty-state">Nenhuma venda registrada neste período</div>';
         return;
     }
@@ -257,8 +270,9 @@ function formatDate(dateString) {
 
 function showAlert(message, type) {
     const container = document.getElementById('alertContainer');
-    const alert = document.createElement('div');
+    if (!container) return;
 
+    const alert = document.createElement('div');
     alert.className = `alert alert-${type}`;
     alert.textContent = message;
 
@@ -269,40 +283,51 @@ function showAlert(message, type) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('saleDate').valueAsDate = new Date();
-    iniciarNotificacoes()
+    const saleDateEl = document.getElementById('saleDate');
+    if (saleDateEl) saleDateEl.valueAsDate = new Date();
 
+    // FIX: só chama iniciarNotificacoes se a função existir
+    if (typeof iniciarNotificacoes === 'function') {
+        iniciarNotificacoes();
+    }
+
+    // FIX: verifica cada elemento antes de adicionar listener
     ['dinheiro', 'pix', 'cartao', 'gastos'].forEach(id => {
-        document.getElementById(id).addEventListener('input', updateSummary);
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', updateSummary);
     });
 
-    document.getElementById('salesForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
+    // FIX: verifica se o formulário existe antes de adicionar listener
+    const form = document.getElementById('salesForm');
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-        const sale = {
-            date: document.getElementById('saleDate').value,
-            dinheiro: parseFloat(document.getElementById('dinheiro').value) || 0,
-            pix: parseFloat(document.getElementById('pix').value) || 0,
-            cartao: parseFloat(document.getElementById('cartao').value) || 0,
-            gastos: parseFloat(document.getElementById('gastos').value) || 0
-        };
+            const sale = {
+                date: document.getElementById('saleDate').value,
+                dinheiro: parseFloat(document.getElementById('dinheiro').value) || 0,
+                pix: parseFloat(document.getElementById('pix').value) || 0,
+                cartao: parseFloat(document.getElementById('cartao').value) || 0,
+                gastos: parseFloat(document.getElementById('gastos').value) || 0
+            };
 
-        sale.total = sale.dinheiro + sale.pix + sale.cartao;
+            sale.total = sale.dinheiro + sale.pix + sale.cartao;
 
-        try {
-            await db.saveSale(sale);
-            showAlert('Venda registrada com sucesso!', 'success');
+            try {
+                await db.saveSale(sale);
+                showAlert('Venda registrada com sucesso!', 'success');
 
-            document.getElementById('dinheiro').value = '';
-            document.getElementById('pix').value = '';
-            document.getElementById('cartao').value = '';
-            document.getElementById('gastos').value = '';
-            updateSummary();
-        } catch (error) {
-            console.error(error);
-            showAlert(error.message || 'Erro ao salvar venda', 'error');
-        }
-    });
+                document.getElementById('dinheiro').value = '';
+                document.getElementById('pix').value = '';
+                document.getElementById('cartao').value = '';
+                document.getElementById('gastos').value = '';
+                updateSummary();
+            } catch (error) {
+                console.error(error);
+                showAlert(error.message || 'Erro ao salvar venda', 'error');
+            }
+        });
+    }
 
     updateSummary();
 });
@@ -317,17 +342,24 @@ function enviarResumoWhatsApp() {
     const liquido = total - gastos;
 
     const hoje = new Date().toLocaleDateString('pt-BR');
-    const usuario = sessionStorage.getItem('usuario') || 'Desconhecido';
+    const usuario = localStorage.getItem('usuario') || 'Desconhecido';
 
     const mensagem = `
 📊 *Resumo de Vendas*
 📅 ${hoje}
+
 👤 Usuário: ${usuario}
+
 💰 Dinheiro: ${formatCurrency(dinheiro)}
+
 📲 Pix: ${formatCurrency(pix)}
+
 💳 Cartão: ${formatCurrency(cartao)}
+
 💸 Gastos: ${formatCurrency(gastos)}
+
 ✅ *Total Bruto:* ${formatCurrency(total)}
+
 🟢 *Total Líquido:* ${formatCurrency(liquido)}
     `;
 

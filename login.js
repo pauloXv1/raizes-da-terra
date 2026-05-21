@@ -1,9 +1,16 @@
 const USUARIOS = [
-    { usuario: 'paulo',  senha: 'paulo2025' },
-    { usuario: 'renan', senha: 'reann2025' }
+    { usuario: 'paulo', senha: 'paulo2025' },
+    { usuario: 'renan', senha: 'renan2025' }
 ];
 
-if (sessionStorage.getItem('logado') === 'true') {
+if (!sessionStorage.getItem('sessionViva')) {
+    localStorage.removeItem('logado');
+    localStorage.removeItem('usuario');
+}
+
+sessionStorage.setItem('sessionViva', 'true');
+
+if (localStorage.getItem('logado') === 'true') {
     window.location.href = 'index.html';
 }
 
@@ -38,8 +45,8 @@ form.addEventListener('submit', (e) => {
         btnLogin.disabled = true;
         alertEl.classList.remove('show');
 
-        sessionStorage.setItem('logado', 'true');
-        sessionStorage.setItem('usuario', usuario);
+        localStorage.setItem('logado', 'true');
+        localStorage.setItem('usuario', usuario);
 
         setTimeout(() => {
             window.location.href = 'registro.html';
