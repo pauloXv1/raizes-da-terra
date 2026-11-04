@@ -94,8 +94,8 @@ function enviarNotificacao(titulo, corpo) {
 
     const notificacao = new Notification(titulo, {
         body: corpo,
-        icon: 'icon-central.png',
-        badge: 'favicon-32.png',
+        icon: 'assets/images/icon-central.png',
+        badge: 'assets/images/favicon-32.png',
         tag: 'lembrete-vendas',   
         renotify: true
     });
