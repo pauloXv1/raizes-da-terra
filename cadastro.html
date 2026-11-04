@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Criar conta · Raízes da Terra</title>
+    <link rel="icon" href="assets/images/favicon-32.png">
+    <link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+    <main class="login">
+        <button type="button" data-back="index.html" class="secondary">← Voltar</button>
+        <section class="panel">
+            <p class="muted">RAÍZES DA TERRA</p>
+            <h1>Crie sua conta</h1>
+            <p>Solicite acesso para consultar nossos produtos e vendas. Um administrador precisa aprovar seu cadastro.</p>
+            <form id="signupForm">
+                <label for="email">E-mail<input id="email" type="email" autocomplete="username" required maxlength="254"></label>
+                <label for="password">Senha<input id="password" type="password" autocomplete="new-password" minlength="8" required aria-describedby="passwordHelp"></label>
+                <small id="passwordHelp">Use pelo menos 8 caracteres.</small>
+                <label for="confirmPassword">Confirme a senha<input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" required></label>
+                <p id="status" role="status" aria-live="polite"></p>
+                <button id="btnSignup" type="submit">Solicitar cadastro</button>
+            </form>
+            <p>Já possui conta? <a href="index.html">Entrar</a></p>
+        </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/cadastro.js"></script>
+</body>
+</html>

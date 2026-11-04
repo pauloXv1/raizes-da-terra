@@ -30,12 +30,24 @@ test('conta bloqueada não ganha acesso', async () => {
 test('leitor não entra na administração', async () => {
     const { app, redirects } = context({ id: '1' }, { ativo: true, papel: 'leitor' });
     await assert.rejects(app.requireAccess(true));
-    assert.deepEqual(redirects, ['precos.html']);
+    assert.deepEqual(redirects, ['inicio.html']);
 });
 test('administrador ativo entra e falhas de consulta negam acesso', async () => {
     const profile = { ativo: true, papel: 'admin' };
     assert.equal(await context({ id: '1' }, profile).app.requireAccess(true), profile);
     await assert.rejects(context({ id: '1' }, null, { message: 'offline' }).app.requireAccess());
+});
+test('perfil pendente pode abrir a tela inicial, mas não os dados protegidos', async () => {
+    const profile = { ativo: false, aprovado: false, papel: 'leitor' };
+    const { app, redirects } = context({ id: '1' }, profile);
+    assert.equal(await app.getProfile(), profile);
+    assert.equal(app.profile, null);
+    await assert.rejects(app.requireAccess());
+    assert.deepEqual(redirects, ['inicio.html']);
+});
+test('leitor liberado tem acesso de consulta', async () => {
+    const profile = { ativo: true, aprovado: true, papel: 'leitor' };
+    assert.equal(await context({ id: '1' }, profile).app.requireAccess(), profile);
 });
 test('referências locais de todas as páginas e ícones existem', () => {
     for (const file of fs.readdirSync(root).filter(name => name.endsWith('.html'))) {
@@ -47,5 +59,14 @@ test('referências locais de todas as páginas e ícones existem', () => {
     }
     for (const icon of JSON.parse(fs.readFileSync(path.join(root, 'manifest.json'), 'utf8')).icons) {
         assert.ok(fs.existsSync(path.join(root, icon.src.replace(/^\//, ''))));
+    }
+});
+
+
+test('scripts do aplicativo cont?m JavaScript v?lido e nenhum byte nulo', () => {
+    for (const file of fs.readdirSync(path.join(root, 'assets/js')).filter(name => name.endsWith('.js'))) {
+        const source = fs.readFileSync(path.join(root, 'assets/js', file), 'utf8');
+        assert.ok(!source.includes('\0'), file + ' cont?m bytes nulos');
+        assert.doesNotThrow(() => new vm.Script(source, { filename: file }));
     }
 });

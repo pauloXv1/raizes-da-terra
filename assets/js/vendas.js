@@ -8,6 +8,8 @@ class SalesDatabase {
 
     async loadSales() {
         try {
+            await App.requireAccess();
+            document.body.classList.toggle('sales-readonly', App.profile.papel !== 'admin');
             const { data, error } = await supabaseCliente
                 .from('vendas')
                 .select('*')
@@ -28,14 +30,18 @@ class SalesDatabase {
             }));
 
             this.render();
+            App.message(App.profile.papel === 'admin' ? 'Gerencie as vendas ou consulte o histórico.' : 'Modo de visualização: consulte as vendas e os resultados do período.');
         } catch (error) {
+            this.sales = [];
+            this.render();
             console.error('Erro ao carregar vendas:', error);
-            showAlert('Erro ao carregar vendas', 'error');
+            App.message('Erro ao carregar vendas. ' + error.message, true);
         }
     }
 
     async saveSale(sale) {
         try {
+            await App.requireAccess(true);
             const { error } = await supabaseCliente
                 .from('vendas')
                 .insert([{
@@ -59,6 +65,7 @@ class SalesDatabase {
 
     async deleteSale(id) {
         try {
+            await App.requireAccess(true);
             const { error } = await supabaseCliente
                 .from('vendas')
                 .delete()
@@ -201,7 +208,7 @@ function renderHistory(sales) {
                     <th>Total Bruto</th>
                     <th>Gastos</th>
                     <th>Total Líquido</th>
-                    <th>Ação</th>
+                    ${App.profile?.papel === 'admin' ? '<th>Ação</th>' : ''}
                 </tr>
             </thead>
             <tbody>
@@ -217,11 +224,7 @@ function renderHistory(sales) {
                 <td>${formatCurrency(sale.total)}</td>
                 <td style="color: #e53e3e;">${formatCurrency(sale.gastos)}</td>
                 <td><strong style="color: #276749;">${formatCurrency(sale.liquido)}</strong></td>
-                <td>
-                    <button class="delete-btn" onclick="deleteSale(${sale.id})">
-                        🗑️ Excluir
-                    </button>
-                </td>
+                ${App.profile?.papel === 'admin' ? '<td><button class="delete-btn" type="button">🗑️ Excluir</button></td>' : ''}
             </tr>
         `;
     });
@@ -232,6 +235,9 @@ function renderHistory(sales) {
     `;
 
     container.innerHTML = html;
+    container.querySelectorAll('.delete-btn').forEach((button, index) => {
+        button.addEventListener('click', () => deleteSale(sales[index].id));
+    });
 }
 
 async function deleteSale(id) {
@@ -272,8 +278,11 @@ function showAlert(message, type) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    try { await App.requireAccess(true); db = new SalesDatabase(); document.getElementById('salesContent').hidden = false; }
+    try { await App.requireAccess(); db = new SalesDatabase(); document.getElementById('salesContent').hidden = false; }
     catch (error) { App.message(error.message, true); return; }
+    document.body.classList.toggle('sales-readonly', App.profile.papel !== 'admin');
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) db.loadSales(); });
+    if (App.profile.papel !== 'admin') return;
     const saleDateEl = document.getElementById('saleDate');
     if (saleDateEl) saleDateEl.valueAsDate = new Date();
 

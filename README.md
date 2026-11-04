@@ -51,3 +51,12 @@ Execute `node --test` para verificar os guardas de acesso e as referências loca
 A migração e a integração com o banco remoto precisam ser validadas após sua aplicação; verificações locais não substituem essa etapa.
 
 Referências: [Supabase Auth e perfis](https://supabase.com/docs/guides/auth/managing-user-data), [RLS](https://supabase.com/docs/guides/database/postgres/row-level-security), [Postgres Changes](https://supabase.com/docs/guides/realtime/postgres-changes).
+
+
+## Cadastro e visualiza??o
+
+As p?ginas usam o tema verde compartilhado em assets/css/app.css. A consulta de pre?os inclui frutas, legumes e folhagens; o cadastro de produtos tamb?m aceita ma?o.
+
+cadastro.html permite solicitar uma conta com e-mail e senha. inicio.html apresenta os acessos e a situa??o da aprova??o. Administradores aprovam ou recusam solicita??es no painel; leitores aprovados consultam pre?os e vendas, enquanto altera??es continuam restritas aos administradores.
+
+Para ativar esta atualiza??o no Supabase existente, execute supabase/migrations/202611030002_cadastro_visualizacao.sql depois da primeira migra??o. Habilite o cadastro por e-mail em Authentication e configure as URLs de confirma??o para o dom?nio da aplica??o. Essa configura??o substitui a orienta??o anterior de desativar cadastros p?blicos. Valide a confirma??o de e-mail, aprova??o, bloqueio e consulta de vendas com uma conta de leitor antes de liberar o uso.

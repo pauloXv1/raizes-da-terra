@@ -10,21 +10,29 @@
 <body>
 <nav aria-label="Navegação principal">
 <strong>Raízes da Terra</strong>
+<a href="inicio.html">Início</a>
 <a href="precos.html">Preços</a>
-<a href="registro.html" data-admin hidden>Vendas</a>
+<a href="registro.html">Vendas</a>
 <a href="admin.html" data-admin hidden>Administração</a>
 <span data-user>
 </span>
 <button type="button" data-logout>Sair</button>
 </nav>
 <main>
+<button type="button" data-back="inicio.html" class="secondary">← Voltar</button>
 <h1>Administração</h1>
-<p>Gerencie as frutas e o acesso da equipe.</p>
+<p>Gerencie os produtos e o acesso da equipe.</p>
 <p id="status" role="status" aria-live="polite">Verificando acesso…</p>
 <div id="adminContent" hidden>
+<section class="panel" aria-labelledby="requestsTitle">
+<h2 id="requestsTitle">Solicitações de acesso <span id="pendingCount" class="badge pending">0</span></h2>
+<p>Novos cadastros aguardam sua aprovação. Ao aprovar, você libera apenas a visualização de Vendas e Preços.</p>
+<div id="pendingRequests" class="pending-list"></div>
+</section>
 <section class="panel">
-<h2>Cadastrar fruta</h2>
-<form id="fruitForm">
+<h2>Cadastrar produto</h2>
+<p>Use o mesmo cadastro para frutas, legumes e folhagens.</p>
+<form id="productForm">
 <div class="form-grid">
 <label>Nome<input name="nome" required maxlength="80">
 </label>
@@ -34,42 +42,44 @@
 <option value="cx">Caixa</option>
 <option value="bandeja">Bandeja</option>
 <option value="duzia">Dúzia</option>
+<option value="maco">Maço</option>
 </select>
 </label>
 <label>Preço (R$)<input name="preco" type="number" required min="0" max="999999.99" step="0.01">
 </label>
 </div>
-<button type="submit">Cadastrar fruta</button>
+<button type="submit">Cadastrar produto</button>
 </form>
 </section>
 <section class="panel">
-<h2>Frutas e preços</h2>
-<p>Salve cada alteração. Frutas ocultas deixam de aparecer para consulta.</p>
+<h2>Produtos e preços</h2>
+<p>Salve cada alteração. Produtos ocultos deixam de aparecer para consulta.</p>
 <div class="table-scroll">
 <table>
 <thead>
 <tr>
-<th>Fruta</th>
+<th>Produto</th>
 <th>Unidade</th>
 <th>Preço (R$)</th>
 <th>Visibilidade</th>
 <th>Ação</th>
 </tr>
 </thead>
-<tbody id="fruitRows">
+<tbody id="productRows">
 </tbody>
 </table>
 </div>
 </section>
 <section class="panel">
 <h2>Acessos</h2>
-<p>Cadastre ou convide as contas em Supabase → Authentication → Users. Depois, libere o acesso abaixo. Administradores também podem gerenciar vendas.</p>
+<p>Os usuários se cadastram na tela de entrada e solicitam acesso. Aqui você pode liberar visualização, bloquear acessos ou conceder administração.</p>
 <button type="button" id="reloadUsers" class="secondary">Atualizar usuários</button>
 <div class="table-scroll">
 <table>
 <thead>
 <tr>
 <th>Usuário</th>
+<th>Situação</th>
 <th>Permissão</th>
 <th>Acesso</th>
 <th>Ação</th>
