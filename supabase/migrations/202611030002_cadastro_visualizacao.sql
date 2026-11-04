@@ -1,6 +1,12 @@
 -- Execute depois de 202611030001_auth_precos.sql, uma única vez.
 begin;
 
+-- Corrige concessões explícitas encontradas no banco existente.
+-- Revogar apenas de PUBLIC não remove permissões dadas diretamente a anon.
+revoke all on function public.e_admin(), public.tem_acesso() from public, anon;
+grant execute on function public.e_admin(), public.tem_acesso() to authenticated;
+revoke all on function public.criar_perfil() from public, anon, authenticated;
+
 -- Distingue novas solicitações de usuários que já foram aprovados/bloqueados.
 alter table public.perfis add column aprovado boolean not null default false;
 update public.perfis set aprovado = true where ativo;

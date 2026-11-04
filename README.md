@@ -2,61 +2,58 @@
 
 Aplicação estática com Supabase Auth, Postgres e Realtime. Sirva a raiz do projeto por HTTP/HTTPS.
 
-## Estrutura
+## Páginas e acesso
 
-- `index.html`: entrada com e-mail e senha.
-- `precos.html`: consulta das frutas para usuários liberados.
-- `admin.html`: cadastro, preços, visibilidade e permissões.
-- `registro.html`: controle de vendas, restrito aos administradores.
-- `assets/css`, `assets/js`, `assets/images`: estilos, comportamento e imagens.
-- `supabase/migrations`: estrutura e políticas do banco.
-- `tests`: verificações locais com `node --test`.
+- `index.html`: login por e-mail e senha e retorno da confirmação de e-mail.
+- `cadastro.html`: solicitação de conta com confirmação de senha.
+- `inicio.html`: situação do cadastro e acessos disponíveis.
+- `precos.html`: consulta de produtos visíveis (frutas, legumes e folhagens).
+- `registro.html`: consulta de vendas por leitores aprovados e administração de vendas por administradores.
+- `admin.html`: produtos, preços, visibilidade, aprovação, recusa e bloqueio de usuários.
 
-## Ativação no Supabase existente
+As páginas usam o tema verde compartilhado em `assets/css/app.css`. A tabela física `frutas` representa todos os produtos e aceita também a unidade `maco`.
 
-1. Faça backup do banco. A migração pressupõe a tabela `public.vendas` já existente e substitui suas políticas para restringir vendas aos administradores. Os registros são preservados.
-2. Execute `supabase/migrations/202611030001_auth_precos.sql` no SQL Editor, uma única vez.
-3. Em Authentication → Users, crie as contas do dono e do sócio com seus e-mails e novas senhas individuais. As senhas ficam sob gestão do Supabase Auth; não crie uma coluna de senhas em `perfis`.
-4. Libere essas duas contas no SQL Editor, substituindo os exemplos pelos e-mails reais:
+Novos perfis começam com `papel = 'leitor'`, `ativo = false` e `aprovado = false`, independentemente dos metadados enviados pelo cliente. O administrador aprova (`ativo = true`, `aprovado = true`) ou recusa (`ativo = false`, `aprovado = true`) o cadastro. O bloqueio posterior também desativa o acesso. O administrador não altera o próprio acesso pelo painel.
+
+## Migrações
+
+Para uma instalação em que `public.vendas` já existe, execute uma única vez, nesta ordem:
+
+1. `supabase/migrations/202611030001_auth_precos.sql`
+2. `supabase/migrations/202611030002_cadastro_visualizacao.sql`
+
+Confira o esquema e o histórico antes de executar. A primeira cria perfis/produtos, gatilhos e políticas; a segunda adiciona aprovação, consulta de vendas para leitores e a unidade maço. A segunda também restringe permissões explícitas de execução de funções encontradas no banco existente. Os registros existentes são preservados.
+
+No projeto `rpozdqemixvqfbjrtdpq`, a primeira já existia no esquema sem registro no histórico. Sua estrutura foi conferida e registrada como baseline, sem reexecutar a criação das tabelas. A segunda foi aplicada pelo MCP e o histórico foi reconciliado com as versões locais `202611030001` e `202611030002`. Consulte `supabase/VALIDACAO.md` antes de qualquer reaplicação.
+
+Para estabelecer o primeiro administrador em uma instalação nova, use o SQL Editor e o e-mail real da conta criada no Supabase Auth:
 
 ```sql
 update public.perfis
-set papel = 'admin', ativo = true
-where email in ('dono@exemplo.com', 'socio@exemplo.com');
+set papel = 'admin', ativo = true, aprovado = true
+where email = 'administrador@exemplo.com';
 ```
 
-5. Confira a URL e a chave **pública** em `assets/js/config.js`. A chave pública é própria para o navegador; a proteção é feita pelas políticas RLS. Nunca coloque `service_role`, senha de banco ou chave secreta nesse arquivo.
-6. Em Authentication, desative o cadastro público se o acesso for apenas por convite. Configure Site URL e Redirect URLs com o domínio publicado. Para convites ou recuperação, use o fluxo do painel Supabase e defina uma senha antes de acessar este login; a aplicação não implementa uma tela de recuperação.
-7. Publique os arquivos e entre em `index.html`. Cadastre as frutas na Administração. Não foram inventados preços iniciais.
+## Configuração do Supabase Auth
 
-Para adicionar leitores, crie a conta em Authentication → Users e clique em **Atualizar usuários** na Administração. Libere seu acesso com a permissão **Consulta**. Novas contas começam bloqueadas, mesmo quando criadas com metadados de administrador. O administrador não pode bloquear ou rebaixar a própria conta pelo painel.
+Em Authentication, habilite cadastro por e-mail e confirmação de e-mail. A confirmação do endereço e a aprovação do administrador são etapas independentes. Configure:
 
-As senhas antigas estavam expostas no código e continuam no histórico Git: substitua-as, incluindo em outros serviços caso tenham sido reutilizadas. A migração não cria nem reaproveita as credenciais antigas.
+- **Site URL**: URL pública real da aplicação.
+- **Redirect URLs**: URL absoluta de `index.html` no domínio e caminho publicados. O cadastro usa `new URL('index.html', location.href)` em `emailRedirectTo`; em produção, cadastre essa URL exata.
+- Para desenvolvimento, inclua separadamente a URL local de `index.html` com a porta usada.
+
+Não presuma que o endereço do repositório GitHub é o domínio publicado. Confira o SMTP, os limites de envio e o modelo de confirmação. A aplicação não implementa recuperação de senha. As configurações atuais de cadastro, confirmação e redirecionamento ainda precisam ser conferidas no painel: os recursos MCP disponíveis nesta sessão não expõem a configuração do Auth.
+
+A URL e a chave pública ficam em `assets/js/config.js`. Nunca exponha `service_role`, senha de banco ou chave secreta no navegador. A proteção dos dados é feita por grants e RLS no banco. Substitua quaisquer senhas antigas que tenham sido publicadas no histórico do repositório.
 
 ## Atualizações e validação
 
-Os preços são consultados assincronamente, com eventos do Supabase Realtime e consulta de apoio a cada 15 segundos quando a aba está visível. Ao voltar à aba ou recuperar a conexão, a consulta é refeita. Erros limpam a lista para não apresentar valores antigos como atuais. O service worker não armazena preços ou dados privados offline.
+Os preços usam Realtime e consulta de apoio a cada 15 segundos quando a aba está visível. Ao voltar à aba ou recuperar a conexão, a consulta é refeita. Erros limpam a lista. O service worker não armazena preços ou dados privados offline. A edição de produtos detecta alterações concorrentes e exige recarregar antes de sobrescrever uma versão modificada por outro administrador.
 
-O painel detecta alterações concorrentes de uma mesma fruta: se outro administrador salvar primeiro, é preciso recarregar a página antes de tentar salvar novamente.
+Execute `node --test` para os testes locais. `tests/remote-access.sql` valida permissões com os papéis reais `anon` e `authenticated`, inclusive aprovação, recusa, bloqueio, escrita administrativa e tentativa de elevação de permissão. Execute o arquivo integralmente como postgres: os dados temporários são descartados por `ROLLBACK`. Esse teste não envia mensagens, não autentica pelo serviço Auth e não substitui testes no navegador.
 
-Execute `node --test` para verificar os guardas de acesso e as referências locais. Antes da publicação, valide no Supabase de homologação:
+Antes de liberar novos cadastros em produção, valide o envio e recebimento da confirmação, o retorno para `index.html`, o login, a aprovação e o bloqueio no navegador. Em dois navegadores, confira também atualização e ocultação de produtos pelo Realtime.
 
-1. Sem sessão: leitura de frutas, perfis e vendas deve ser negada pela API.
-2. Leitor liberado: consulta frutas visíveis; não altera frutas/perfis nem consulta vendas.
-3. Usuário bloqueado: não consulta frutas nem vendas.
-4. Administrador: cadastra e edita frutas, gerencia outros acessos e registra vendas.
-5. Em dois navegadores: altere um preço como administrador e confira a atualização no leitor; depois oculte a fruta.
-6. Confirme que as vendas existentes continuam disponíveis aos administradores.
+Backups `*.corrompido.bak` são locais e estão ignorados pelo Git.
 
-A migração e a integração com o banco remoto precisam ser validadas após sua aplicação; verificações locais não substituem essa etapa.
-
-Referências: [Supabase Auth e perfis](https://supabase.com/docs/guides/auth/managing-user-data), [RLS](https://supabase.com/docs/guides/database/postgres/row-level-security), [Postgres Changes](https://supabase.com/docs/guides/realtime/postgres-changes).
-
-
-## Cadastro e visualiza??o
-
-As p?ginas usam o tema verde compartilhado em assets/css/app.css. A consulta de pre?os inclui frutas, legumes e folhagens; o cadastro de produtos tamb?m aceita ma?o.
-
-cadastro.html permite solicitar uma conta com e-mail e senha. inicio.html apresenta os acessos e a situa??o da aprova??o. Administradores aprovam ou recusam solicita??es no painel; leitores aprovados consultam pre?os e vendas, enquanto altera??es continuam restritas aos administradores.
-
-Para ativar esta atualiza??o no Supabase existente, execute supabase/migrations/202611030002_cadastro_visualizacao.sql depois da primeira migra??o. Habilite o cadastro por e-mail em Authentication e configure as URLs de confirma??o para o dom?nio da aplica??o. Essa configura??o substitui a orienta??o anterior de desativar cadastros p?blicos. Valide a confirma??o de e-mail, aprova??o, bloqueio e consulta de vendas com uma conta de leitor antes de liberar o uso.
+Referências: [perfis](https://supabase.com/docs/guides/auth/managing-user-data), [RLS](https://supabase.com/docs/guides/database/postgres/row-level-security), [redirecionamentos](https://supabase.com/docs/guides/auth/redirect-urls).
